@@ -1,11 +1,16 @@
-## Data Warehousing with AWS Redshift
+## Data Pipeline with Apache Airflow
+
+
+#### Introduction
+A music streaming startup, Sparkify, has decided to introduce automation and monitoring to their data warehouse ETL pipelines.\
+The data used resides in S3, in a directory of JSON logs that tell about user activity on the app, and JSON metadata about the songs the users are listen to.\
+The goal is to create an ETL pipeline using Apache Airflow.
 
 
 #### Project Description
-A music streaming startup, Sparkify, has grown their user base and song database and want to move their processes and data onto the cloud.
-The data resides in S3, in a directory of JSON logs on user activity on the app, as well as a directory with JSON metadata on the songs in their app.
-In this project, I have built an ETL pipeline that extracts the data from S3, stages them in Redshift, and transforms data into a set of dimensional tables.
-The analytics team can then access the processed data to find insights into what songs their users are listening
+In this project, I have used Apache Airflow to build an ETL pipeline from reusable tasks that can be monitored and allows easy backfills.\
+The pipeline consists of four operators that fetch data from the S3 bucket and loads it to redshift staging tables, Process the staging data, and load it to the fact and dimensions table. Finally, the data quality checks operator is used to find if there are any data discrepancies.\
+I have also defined a set of tasks and their dependencies to achieve a coherent and sensible data flow within the pipeline.
 
 
 #### Datasets
@@ -63,12 +68,23 @@ And below is an example of what the data in a log file, 2018-11-12-events.json, 
 
 
 #### Project Files
-In addition to the data files, the project includes four files:
-* *create_tables.py* drops and creates the tables. This file can be run to reset the tables each time before the ETL scripts are run.
-* *etl.py* load data from S3 to staging tables on Redshift and load data from staging tables to dimensions tables on Redshift.
-* *sql_queries.py* contains all the sql queries, and is imported into the two files above.
-* *dwh.cfg* contains redshift database and IAM role information.
+The project has two directories- dags and plugins and a create tables script.
+
+**dags directory**
+* *udac_example_dag* It is the main DAG which has its tasks and their dependencies defined.
+
+**plugins directory**
+It consists of Operators and Helpers
+###### operators
+* *stage_redshift.py* - Defines StageToRedshiftOperator to copy JSON data from S3 to staging tables in the Redshift via copy command.
+* *load_dimension.py* - Defines LoadDimensionOperator to load a dimension table from staging table(s).
+* *load_fact.py* - Defines LoadFactOperator to load fact table from staging table(s).
+* *data_quality.py* - Defines DataQualityOperator to run data quality checks on all tables passed as parameter.
+###### helpers
+* *sql_queries.py* - Contains SQL queries for the ETL pipeline.
+
+*create_tables.sql* - DDL of fact and dimension tables.
 
 
 #### How To Run the Project
-Run etl.py to process all the files under S3 and load the data into Redshift staging tables. Accessing staging tables to load data into respective dimension tables in redshift.
+Enable the DAG in Airflow and it should begin processing.
