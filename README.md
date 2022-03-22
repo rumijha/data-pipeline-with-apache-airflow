@@ -9,8 +9,11 @@ The goal is to create an ETL pipeline using Apache Airflow.
 
 #### Project Description
 In this project, I have used Apache Airflow to build an ETL pipeline from reusable tasks that can be monitored and allows easy backfills.\
-The pipeline consists of four operators that fetch data from the S3 bucket and loads it to redshift staging tables, Process the staging data, and load it to the fact and dimensions table. Finally, the data quality checks operator is used to find if there are any data discrepancies.\
+The pipeline consists of a dag and four operators that fetch data from the S3 bucket and loads it to redshift staging tables, Process the staging data, and load it to the fact and dimensions table. Finally, the data quality checks operator is used to find if there are any data discrepancies.\
 I have also defined a set of tasks and their dependencies to achieve a coherent and sensible data flow within the pipeline.
+
+The flow of the tasks within a dag is as shown below,\
+![alt text](https://github.com/rumijha/data-pipeline-with-apache-airflow/blob/main/dag.png)
 
 
 #### Datasets
