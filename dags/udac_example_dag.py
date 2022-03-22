@@ -27,7 +27,7 @@ dag = DAG('udac_example_dag',
 
 start_operator = DummyOperator(task_id='Begin_execution',  dag=dag)
 
-# Defining operators to insert records into staging tables from S3 bucket
+# Defining tasks to insert records into staging tables from S3 bucket
 stage_events_to_redshift = StageToRedshiftOperator(
     task_id='Stage_events',
     dag=dag,
@@ -48,7 +48,7 @@ stage_songs_to_redshift = StageToRedshiftOperator(
     s3_key = "song_data/A/A/A/TRAAAAW128F429D538.json"
 )
 
-# Defining operator to insert records into fact table from staging tables
+# Defining task to insert records into fact table from staging tables
 load_songplays_table = LoadFactOperator(
     task_id='Load_songplays_fact_table',
     dag=dag,
@@ -58,7 +58,7 @@ load_songplays_table = LoadFactOperator(
     insert_query=SqlQueries.songplay_table_insert
 )
 
-# Defining operators to insert records into dimension tables from staging tables
+# Defining tasks to insert records into dimension tables from staging tables
 load_user_dimension_table = LoadDimensionOperator(
     task_id='Load_user_dim_table',
     dag=dag,
@@ -95,7 +95,7 @@ load_time_dimension_table = LoadDimensionOperator(
     insert_query=SqlQueries.time_table_insert
 )
 
-# Defining operator to perform quality checks
+# Defining task to perform quality checks
 run_quality_checks = DataQualityOperator(
     task_id='Run_data_quality_checks',
     dag=dag,
